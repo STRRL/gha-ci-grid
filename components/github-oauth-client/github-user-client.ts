@@ -74,6 +74,9 @@ export default class GithubUserClient {
             per_page: pageSize,
             page: page,
         });
+        if(listWorkflowRunsReponse.data.total_count == 0) {
+            return []
+        }
         let earliest = new Date(listWorkflowRunsReponse.data.workflow_runs.reduce((prev, current) => (new Date(prev.created_at) > new Date(current.created_at)) ? current : prev).created_at)
         const firstPage = listWorkflowRunsReponse.data.workflow_runs.filter((run) => new Date(run.created_at) > since)
 
@@ -92,6 +95,9 @@ export default class GithubUserClient {
                     per_page: pageSize,
                     page: page,
                 })
+            if (response.data.workflow_runs.length == 0) {
+                break
+            }
             earliest = new Date(response.data.workflow_runs.reduce((prev, current) => (new Date(prev.created_at) > new Date(current.created_at)) ? current : prev).created_at)
             const restPage = response.data.workflow_runs.filter((run) => new Date(run.created_at) > since)
             result.push(...restPage)
