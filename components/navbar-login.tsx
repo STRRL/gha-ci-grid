@@ -1,4 +1,5 @@
 import { Button, Link, Navbar, User } from "@nextui-org/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookie } from "react-use";
 import GithubUserClient from "./github-oauth-client/github-user-client";
@@ -12,6 +13,7 @@ const NavbarLogin = () => {
         link: ""
     })
     const [token, _, deleteToken] = useCookie("token")
+    const router = useRouter()
 
     useEffect(() => {
         if (token) {
@@ -24,6 +26,11 @@ const NavbarLogin = () => {
                     login: data.login,
                     link: `https://github.com/${data.login}`
                 })
+            }).catch((e) => {
+                if (e.status == 401) {
+                    deleteToken()
+                    router.push("/")
+                }
             })
         } else {
             setConnected(false);
@@ -37,6 +44,7 @@ const NavbarLogin = () => {
                     <Button auto flat
                         onClick={() => {
                             deleteToken()
+                            router.reload()
                         }}
                     >
                         Disconnect from GitHub

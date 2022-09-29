@@ -1,10 +1,13 @@
 import type { AppProps } from 'next/app'
 import { NextUIProvider } from '@nextui-org/react';
+import Layout from 'components/layout';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <NextUIProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </NextUIProvider>
   )
 }

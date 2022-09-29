@@ -14,7 +14,8 @@ export default async function handler(
     const { url: targetURL } = app.getWebFlowAuthorizationUrl({
         redirectUrl: `${process.env.BASE_URL}/api/gh/oauth-callback`,
         scopes: [
-            "read:user",
+            "user",
+            "read:org",
             "workflow"
         ]
     })
