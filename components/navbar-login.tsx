@@ -65,7 +65,6 @@ const NavbarLogin = () => {
             <Navbar.Content>
                 <Navbar.Item >
                     <Button auto flat onClick={() => {
-                        console.log(process.env)
                         window.open("/api/gh/oauth-login", '_self')
                     }}>
                         Connet with GitHub

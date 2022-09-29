@@ -29,7 +29,6 @@ export default class GithubUserClient {
         const resposne = await this.octokit.rest.orgs.listForUser({
             username: await (await this.getUser()).login
         })
-        console.log(resposne)
         return resposne.data
     }
 
