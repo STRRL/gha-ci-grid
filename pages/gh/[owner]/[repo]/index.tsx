@@ -53,9 +53,11 @@ const WorkflowSummary = () => {
     useEffect(() => {
         const temp = new Array<WorkflowRunStastics>()
         workflows.forEach(workflow => {
-            ghClient.listGiHubActionRunsWithOwnerRepoWorklfowID(owner, repo, workflow.id).then(
+            // 30 days ago
+            const sevenDaysAgo = new Date()
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 30)
+            ghClient.ListWorkflowRunsWithOwnerRepoWorkflowIDSince(owner, repo, workflow.id, sevenDaysAgo).then(
                 data => {
-                    setLoadingState('loadingMore')
                     const all = data.length
                     const success = data.filter(item => item.conclusion === "success").length
                     const failure = data.filter(item => item.conclusion === "failure").length
@@ -69,7 +71,6 @@ const WorkflowSummary = () => {
                     }
                     console.log(workflow.id, statistics)
                     temp.push(statistics)
-                    setLoadingState('idle')
                 }
             )
         })
