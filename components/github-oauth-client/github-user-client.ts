@@ -12,7 +12,9 @@ export default class GithubUserClient {
         const OctokitWithThrottling = Octokit.plugin(throttling);
         this.octokit = new OctokitWithThrottling({
             auth: accessToken,
-
+            throttle: {
+                enabled: false,
+            },
         });
     }
 
