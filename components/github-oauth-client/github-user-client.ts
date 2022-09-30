@@ -1,5 +1,5 @@
 import { App, Octokit } from "octokit";
-import { throttling } from "@octokit/plugin-throttling";
+import { retry } from "@octokit/plugin-retry";
 import NavbarItem from "@nextui-org/react/types/navbar/navbar-item";
 
 export default class GithubUserClient {
@@ -9,12 +9,9 @@ export default class GithubUserClient {
     constructor(
         accessToken: string
     ) {
-        const OctokitWithThrottling = Octokit.plugin(throttling);
-        this.octokit = new OctokitWithThrottling({
+        const ConfiguredOctokit = Octokit.plugin(retry)
+        this.octokit = new ConfiguredOctokit({
             auth: accessToken,
-            throttle: {
-                enabled: false,
-            },
         });
     }
 
@@ -74,7 +71,7 @@ export default class GithubUserClient {
             per_page: pageSize,
             page: page,
         });
-        if(listWorkflowRunsReponse.data.total_count == 0) {
+        if (listWorkflowRunsReponse.data.total_count == 0) {
             return []
         }
         let earliest = new Date(listWorkflowRunsReponse.data.workflow_runs.reduce((prev, current) => (new Date(prev.created_at) > new Date(current.created_at)) ? current : prev).created_at)
