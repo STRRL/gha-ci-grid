@@ -73,7 +73,15 @@ const WorkflowSummary = () => {
                 )
             }
         )).then(() => {
-            setWorkflowRunsStatistics(temp.sort((a, b) => a.name.localeCompare(b.name)));
+            setWorkflowRunsStatistics(temp.sort((a, b) => {
+                if (Number.isNaN(a.flakeRate)) {
+                    return 1
+                }
+                if (Number.isNaN(b.flakeRate)) {
+                    return -1
+                }
+                return b.flakeRate - a.flakeRate
+            }));
             setLoadingState('idle')
         })
     }, [workflows])
@@ -121,7 +129,7 @@ const WorkflowSummary = () => {
                                             <Text span color="green">{item.success}</Text>/<Text span color="red">{item.failure}</Text>/<Text span >{item.all}</Text>
                                         </Table.Cell>
                                         <Table.Cell>
-                                            <Text color={item.flakeRate > 0.10 ? "red" : "green"}>{(item.flakeRate * 100).toFixed(2)}%</Text>
+                                            <Text color={Number.isNaN(item.flakeRate) ? "black" : item.flakeRate > 0.10 ? "red" : "green"}>{Number.isNaN(item.flakeRate) ? "-" : `${(item.flakeRate * 100).toFixed(2)}%`}</Text>
                                         </Table.Cell>
                                     </Table.Row>
                                 )}
