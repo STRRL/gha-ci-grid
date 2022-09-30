@@ -1,6 +1,5 @@
-import { App, Octokit } from "octokit";
+import { Octokit } from "octokit";
 import { retry } from "@octokit/plugin-retry";
-import NavbarItem from "@nextui-org/react/types/navbar/navbar-item";
 
 export default class GithubUserClient {
     octokit: Octokit
