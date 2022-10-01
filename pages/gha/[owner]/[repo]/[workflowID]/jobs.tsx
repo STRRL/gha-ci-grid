@@ -71,8 +71,6 @@ const JobsSummary = () => {
                         </Table.Body>
                     </Table>
             </Container>
-
-            {owner}/{repo} {workflowID}
         </>
     )
 
