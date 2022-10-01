@@ -116,7 +116,7 @@ const WorkflowSummary = () => {
                                     <Table.Row key={item.id}>
                                         <Table.Cell>
                                             <Text>
-                                                {item.name}
+                                               <Link href={`/gha/${owner}/${repo}/${item.id}/jobs`}>{item.name}</Link> 
                                             </Text>
                                             <Text >
                                                 <Link href={item.html_url.replace("blob/master/.github", "actions")}>{item.path}</Link>
