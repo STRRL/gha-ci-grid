@@ -15,6 +15,7 @@ const JobsSummary = () => {
     const ghClient = new GithubUserClient(token!);
 
     type JobRun = {
+        run_id: number,
         run_attempt?: number,
         conclusion: string | null,
     }
@@ -48,28 +49,28 @@ const JobsSummary = () => {
     return (
         <>
             <Container>
-                    <Table>
-                        <Table.Header>
-                            <Table.Column>Job Name</Table.Column>
-                            <Table.Column>Executions</Table.Column>
-                        </Table.Header>
-                        <Table.Body>
-                            {
-                                Array.from(jobs.entries()).map(([jobName, jobHistory]) => {
-                                    return (
-                                        <Table.Row>
-                                            <Table.Cell>{jobName}</Table.Cell>
-                                            <Table.Cell>
-                                                <JobExecutions
-                                                    exectuions={jobHistory}
-                                                ></JobExecutions>
-                                            </Table.Cell>
-                                        </Table.Row>
-                                    )
-                                })
-                            }
-                        </Table.Body>
-                    </Table>
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Job Name</Table.Column>
+                        <Table.Column>Executions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {
+                            Array.from(jobs.entries()).map(([jobName, jobHistory]) => {
+                                return (
+                                    <Table.Row key={jobName}>
+                                        <Table.Cell>{jobName}</Table.Cell>
+                                        <Table.Cell>
+                                            <JobExecutions
+                                                executions={jobHistory}
+                                            ></JobExecutions>
+                                        </Table.Cell>
+                                    </Table.Row>
+                                )
+                            })
+                        }
+                    </Table.Body>
+                </Table>
             </Container>
         </>
     )

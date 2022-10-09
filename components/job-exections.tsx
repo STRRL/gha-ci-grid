@@ -1,7 +1,8 @@
 import { Col, Container, Row } from "@nextui-org/react"
 
 const JobExecutions = (props: {
-    exectuions: Array<{
+    executions: Array<{
+        run_id: number,
         conclusion: string | null
     }>
 }) => {
@@ -13,8 +14,9 @@ const JobExecutions = (props: {
                 paddingRight: "0px"
             }}>
             {
-                props.exectuions.map(e => {
-                    return <Col
+                props.executions.map(e => {
+                    console.log(e)
+                    return <Col key={e.run_id}
                         style={{
                             backgroundColor: e.conclusion === "success" ? "#00cc33" : "#aa0000",
                             margin: '2px',

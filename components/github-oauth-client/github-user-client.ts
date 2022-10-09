@@ -63,21 +63,21 @@ export default class GithubUserClient {
     async ListWorkflowRunsWithOwnerRepoWorkflowIDSince(owner: string, repo: string, workflowID: number, since: Date) {
         let page = 1
         const pageSize = 100
-        const listWorkflowRunsReponse = await this.octokit.rest.actions.listWorkflowRuns({
+        const listWorkflowRunsResponse = await this.octokit.rest.actions.listWorkflowRuns({
             owner: owner,
             repo: repo,
             workflow_id: workflowID,
             per_page: pageSize,
             page: page,
         });
-        if (listWorkflowRunsReponse.data.total_count == 0) {
+        if (listWorkflowRunsResponse.data.total_count == 0) {
             return []
         }
-        let earliest = new Date(listWorkflowRunsReponse.data.workflow_runs.reduce((prev, current) => (new Date(prev.created_at) > new Date(current.created_at)) ? current : prev).created_at)
-        const firstPage = listWorkflowRunsReponse.data.workflow_runs.filter((run) => new Date(run.created_at) > since)
+        let earliest = new Date(listWorkflowRunsResponse.data.workflow_runs.reduce((prev, current) => (new Date(prev.created_at) > new Date(current.created_at)) ? current : prev).created_at)
+        const firstPage = listWorkflowRunsResponse.data.workflow_runs.filter((run) => new Date(run.created_at) > since)
 
         if (earliest < since) {
-            return listWorkflowRunsReponse.data.workflow_runs.filter((run) => new Date(run.created_at) > since)
+            return listWorkflowRunsResponse.data.workflow_runs.filter((run) => new Date(run.created_at) > since)
         }
 
         const result = [...firstPage]
@@ -122,4 +122,3 @@ export default class GithubUserClient {
         return response.data.jobs;
     }
 }
-

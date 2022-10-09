@@ -1,4 +1,4 @@
-import { Col, Container, Row, styled, Table, Text } from "@nextui-org/react"
+import { Button, Col, Container, Input, Row, styled, Table, Text } from "@nextui-org/react"
 import GithubUserClient from "components/github-oauth-client/github-user-client"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -20,7 +20,7 @@ const WorkflowSummary = () => {
         created_at: string | null,
     }
 
-    type WorkflowRunStastics = {
+    type WorkflowRunStatistics = {
 
         lastRun: Date,
         all: number,
@@ -36,19 +36,19 @@ const WorkflowSummary = () => {
     const [token] = useCookie("token")
     const ghClient = new GithubUserClient(token!);
     const [loadingState, setLoadingState] = useState<'loading' | 'sorting' | 'loadingMore' | 'error' | 'idle' | 'filtering'>('loadingMore')
-    const [workflows, setWowkrlfows] = useState<Array<Workflow>>([])
-    const [workflowRunsStatistics, setWorkflowRunsStatistics] = useState(new Array<WorkflowRunStastics>())
+    const [workflows, setWorkflows] = useState<Array<Workflow>>([])
+    const [workflowRunsStatistics, setWorkflowRunsStatistics] = useState(new Array<WorkflowRunStatistics>())
 
     useEffect(() => {
         if (owner && repo) {
             ghClient.listWorkflowsWithOwnerRepo(owner, repo).then(data => {
-                setWowkrlfows(data.workflows)
+                setWorkflows(data.workflows)
             })
         }
     }, [owner, repo])
 
     useEffect(() => {
-        const temp = new Array<WorkflowRunStastics>()
+        const temp = new Array<WorkflowRunStatistics>()
         setLoadingState('loadingMore')
         Promise.all(workflows.map(
             workflow => {
@@ -60,7 +60,7 @@ const WorkflowSummary = () => {
                         const all = data.length
                         const success = data.filter(item => item.conclusion === "success").length
                         const failure = data.filter(item => item.conclusion === "failure").length
-                        const statistics: WorkflowRunStastics = {
+                        const statistics: WorkflowRunStatistics = {
                             lastRun: data.reduce((acc, cur) => { if (cur.created_at && new Date(cur.created_at) > acc) return new Date(cur.created_at); return acc }, new Date(0)),
                             all: all,
                             success: success,
@@ -116,7 +116,7 @@ const WorkflowSummary = () => {
                                     <Table.Row key={item.id}>
                                         <Table.Cell>
                                             <Text>
-                                               <Link href={`/gha/${owner}/${repo}/${item.id}/jobs`}>{item.name}</Link> 
+                                                <Link href={`/gha/${owner}/${repo}/${item.id}/jobs`}>{item.name}</Link>
                                             </Text>
                                             <Text >
                                                 <Link href={item.html_url.replace("blob/master/.github", "actions")}>{item.path}</Link>
