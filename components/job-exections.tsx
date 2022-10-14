@@ -15,7 +15,6 @@ const JobExecutions = (props: {
             }}>
             {
                 props.executions.map(e => {
-                    console.log(e)
                     return <Col key={e.run_id}
                         style={{
                             backgroundColor: e.conclusion === "success" ? "#00cc33" : "#aa0000",
