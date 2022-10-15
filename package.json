@@ -15,6 +15,7 @@
     "@octokit/plugin-retry": "^3.0.9",
     "bottleneck": "^2.19.5",
     "cookies-next": "^2.1.1",
+    "moment": "^2.29.4",
     "next": "12.3.1",
     "octokit": "^2.0.7",
     "react": "18.2.0",

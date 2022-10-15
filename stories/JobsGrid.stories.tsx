@@ -14,67 +14,144 @@ export default {
 
 const Template: ComponentStory<typeof JobsGrid> = (args) => <JobsGrid {...args} />;
 
-const now = new Date();
 export const Default = Template.bind({});
 
+const today = new Date();
 const yesterday = new Date();
 yesterday.setDate(yesterday.getDate() - 1);
 Default.args = {
-    rows: [
+    rows: [{
+        name: "mock-test-1",
+        executions: [
+            {
+                id: "1",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "2",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "3",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "4",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "5",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "6",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "7",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "8",
+                runAttempt: 1,
+                conclusion: "pending",
+                link: "https://github.com",
+            },
+        ]
+    },
+    {
+        name: "mock-test-2",
+        executions: [
+            {
+                id: "1",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            }, null, null, {
+                id: "4",
+                runAttempt: 1,
+                conclusion: "pending",
+                link: "https://github.com",
+            },
+            {
+                id: "5",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            null,
+            {
+                id: "7",
+                runAttempt: 1,
+                conclusion: "success",
+                link: "https://github.com",
+            },
+            {
+                id: "8",
+                runAttempt: 1,
+                conclusion: "failure",
+                link: "https://github.com",
+            },
+        ]
+    }],
+    columns: [
         {
-            name: 'ci pipeline #1',
+            date: today,
             children: [
                 {
-                    date: now,
+                    timeByMinutes: today,
                     children: [
                         {
-                            timeByMinutes: now,
-                            children: [
-                                {
-                                    commit: '1234567890',
-                                    children: [
-                                        {
-                                            runAttempt: 1,
-                                            conclusion: 'success',
-                                            link: 'https://github.com'
-                                        },
-                                    ]
-                                }
-                            ]
-                        }
+                            commit: "12345678"
+                        },
+                        {
+                            commit: "22345678"
+                        },
+                        {
+                            commit: "32345678"
+                        },
+                        {
+                            commit: "42345678"
+                        },
                     ]
                 }
-            ]
-        }, {
-            name: 'ci pipeline #2',
+            ],
+        },
+        {
+            date: yesterday,
             children: [
                 {
-                    date: yesterday,
+                    timeByMinutes: yesterday,
                     children: [
                         {
-                            timeByMinutes: yesterday,
-                            children: [
-                                {
-                                    commit: "aabbccdd",
-                                    children: [
-                                        {
-                                            runAttempt: 1,
-                                            conclusion: 'failure',
-                                            link: "https://github.com"
-                                        },
-                                        {
-                                            runAttempt: 2,
-                                            conclusion: 'success',
-                                            link: "https://github.com"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                            commit: "12345678"
+                        },
+                        {
+                            commit: "22345678"
+                        },
+                        {
+                            commit: "32345678"
+                        },
+                        {
+                            commit: "42345678"
+                        },
                     ]
                 }
-            ]
+            ],
         }
-
     ]
-};
+} as JobsGridProps;

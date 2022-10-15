@@ -1,0 +1,46 @@
+.content-box {
+    display: flex;
+}
+
+.left-part {
+    width: 15%;
+}
+
+.right-part {
+    overflow: auto;
+}
+
+.top-row {
+    height: 120px;
+}
+
+.table-header {
+    display: flex;
+}
+
+.cell {
+    width: 90px;
+    min-width: 90px;
+    min-height: 25px;
+    margin: 2px 2px;
+    text-align: center;
+}
+
+.execution-success {
+    background-color: hsl(120, 100%, 40%);
+    color: hsla(120, 90%, 15%, 0.9);
+}
+
+.execution-failure {
+    background-color: hsl(0, 95%, 50%);
+    color: hsla(0, 90%, 15%, 0.9);
+}
+
+.execution-pending {
+    background-color: hsl(60, 95%, 50%);
+    color: hsla(60, 90%, 15%, 0.9);
+}
+
+.execution-null {
+    background-color: hsl(0, 0%, 90%);
+}
