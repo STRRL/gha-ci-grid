@@ -16,8 +16,8 @@ const JobsSummary = () => {
     const ghClient = new GithubUserClient(token!);
 
     const [workflowRuns, setWorkflowRuns] = useState<WorkflowRun[]>([])
-    useEffect(() => {
 
+    useEffect(() => {
         const loadData = async () => {
             const result: WorkflowRun[] = [];
             const workflowRuns = await ghClient.listWorkflowRunsForWorkflow(owner, repo, workflowID)

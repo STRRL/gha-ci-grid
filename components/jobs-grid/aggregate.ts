@@ -13,7 +13,7 @@ export function fetchColumns(workflowRuns: WorkflowRun[]): Column[] {
     return Array.from(temp.keys()).sort((a, b) => { return b.created_at.getTime() - a.created_at.getTime() });
 }
 
-type ReducedDateColumn = {
+export type ReducedDateColumn = {
     date: Date,
     span: number
 }
@@ -42,7 +42,7 @@ export function columnDateReducer(columns: Column[]): ReducedDateColumn[] {
     }, []);
 }
 
-type ReducedMinuteColumn = {
+export type ReducedMinuteColumn = {
     minute: Date,
     span: number
 }
@@ -75,7 +75,8 @@ export function columnMinuteReducer(columns: Column[]): ReducedMinuteColumn[] {
         return acc;
     }, []);
 }
-type ReducedCommitColumn = {
+
+export type ReducedCommitColumn = {
     commit: string,
     span: number
 }

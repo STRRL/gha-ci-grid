@@ -1,6 +1,7 @@
 import style from './styles.module.css';
 import moment from 'moment';
-import { columnCommitReducer, columnDateReducer, columnMinuteReducer, fetchCell, fetchColumns, fetchRows } from './aggregate';
+import { columnCommitReducer, columnDateReducer, columnMinuteReducer, fetchCell, fetchColumns, fetchRows, ReducedCommitColumn, ReducedDateColumn, ReducedMinuteColumn } from './aggregate';
+import { useEffect, useState } from 'react';
 export type JobsGridProps = {
     workflowRuns: WorkflowRun[] | null
 }
@@ -31,11 +32,27 @@ export type Cell = {
 }
 
 const JobsGrid = ({ workflowRuns }: JobsGridProps) => {
-    const columns = fetchColumns(workflowRuns || []);
-    const rows = fetchRows(workflowRuns || [])
-    const reducedDateColumns = columnDateReducer(columns);
-    const reducedMinuteColumns = columnMinuteReducer(columns);
-    const reducedCommitColumns = columnCommitReducer(columns);
+    const [columns, setColumns] = useState<Column[]>([])
+    const [rows, setRows] = useState<string[]>([])
+    const [reducedDateColumns, setReducedDateColumns] = useState<ReducedDateColumn[]>([])
+    const [reducedMinuteColumns, setReducedMinuteColumns] = useState<ReducedMinuteColumn[]>([])
+    const [reducedCommitColumns, setReducedCommitColumns] = useState<ReducedCommitColumn[]>([])
+
+    useEffect(() => {
+        if (workflowRuns) {
+            const rows = fetchRows(workflowRuns)
+            const columns = fetchColumns(workflowRuns)
+            const reducedDateColumns = columnDateReducer(columns)
+            const reducedMinuteColumns = columnMinuteReducer(columns)
+            const reducedCommitColumns = columnCommitReducer(columns)
+            setColumns(columns)
+            setRows(rows)
+            setReducedDateColumns(reducedDateColumns)
+            setReducedMinuteColumns(reducedMinuteColumns)
+            setReducedCommitColumns(reducedCommitColumns)
+        }
+    }, [workflowRuns])
+
     return (
         <div style={{
             overflowX: "scroll",
