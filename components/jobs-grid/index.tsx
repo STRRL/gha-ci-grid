@@ -1,106 +1,113 @@
 import style from './styles.module.css';
 import moment from 'moment';
+import { columnCommitReducer, columnDateReducer, columnMinuteReducer, fetchCell, fetchColumns, fetchRows } from './aggregate';
 export type JobsGridProps = {
-    rows: JobRow[] | null
-    columns: JobColumnsByDates[] | null
+    workflowRuns: WorkflowRun[] | null
 }
 
-export type JobRow = {
-    name: string,
-    id?: string,
-    link?: string,
-    executions?: JobExecution[]
-}
-
-export type JobExecution = {
+export type WorkflowRun = {
     id: string,
-    runAttempt: number,
-    conclusion: 'success' | 'failure' | 'pending',
-    link: string
+    created_at: string,
+    head_commit: {
+        id: string
+    },
+    run_attempts: number,
+    job_runs: JobRun[],
 }
 
-export type JobColumnsByDates = {
-    date: Date,
-    children: ByMinutes[] | null
+export type JobRun = {
+    name: string,
+    id: string,
+    html_url: string,
+    conclusion: string
 }
 
-export type ByMinutes = {
-    timeByMinutes: Date,
-    children: ByCommit[] | null
-}
-
-export type ByCommit = {
+export type Column = {
+    created_at: Date,
     commit: string,
+    run_attempts: number,
+}
+export type Cell = {
+    link: string
+    conclusion: string
 }
 
-
-const JobsGrid = ({ rows, columns }: JobsGridProps) => {
+const JobsGrid = ({ workflowRuns }: JobsGridProps) => {
+    const columns = fetchColumns(workflowRuns || []);
+    const rows = fetchRows(workflowRuns || [])
+    const reducedDateColumns = columnDateReducer(columns);
+    const reducedMinuteColumns = columnMinuteReducer(columns);
+    const reducedCommitColumns = columnCommitReducer(columns);
     return (
-        <div
-            className={style['content-box']}
-        >
-            <div
-                className={style['left-part']}
-            >
-                <div
-                    className={style['top-row']}
-                >
-                </div>
-                <div>
-                    {rows?.map((row, index) => (
-                        <div key={`row-name-index-${index}`} className={style['job-name']}>
-                            {row.name}
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div
-                className={style['right-part']}
-            >
-                <div
-                    className={style['top-row']}
-                >
-                    <div className={style['table-header']}>
-                        {columns?.map((column, index) => (
-                            <div key={`column-day-${index}`} >
-                                <div className={style['text-center']}>
-                                    {(moment(column.date)).format('YYYY-MM-DD')}
-                                </div>
-                                <div>
-                                    {column.children?.map((column_by_min, index) => (
-                                        <div key={`column-minutes-${index}`}>
-                                            <div className={style['text-center']}>
-                                                {(moment(column_by_min.timeByMinutes)).format('HH:mm')}
-                                            </div>
-                                            <div className={style['execution-container']}>
-                                                {column_by_min.children?.map((column_by_commit, index) => (
-                                                    <div key={`column-commit-${index}`} className={style.cell}>
-                                                        {column_by_commit.commit}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div>
-                    {rows?.map((row, index) => (
-                        <div key={`row-content-index-${index}`} >
-                            <div className={style['execution-container']}>
-                                {row.executions?.map((execution, index) => (
-                                    <div key={`row-execution-index-${index}`}
-                                        className={[style.cell, style['execution-' + (execution ? execution.conclusion : 'null')]].join(' ')}
-                                    >
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+        <div>
+            <table>
+                <tr>
+                    <th rowSpan={3}>Job Name</th>
+                    {
+                        reducedDateColumns.map((column, index) => {
+                            return (
+                                <th colSpan={column.span} key={index} className={[style['head-cell']].join(' ')}>
+                                    {moment(column.date).format('YYYY-MM-DD')}
+                                </th>
+                            )
+                        })
+                    }
+                </tr>
+                <tr>
+                    {
+                        reducedMinuteColumns.map((column, index) => {
+                            return (
+                                <th colSpan={column.span} key={index} className={[style['head-cell']].join(' ')}>
+                                    {moment(column.minute).format('HH:mm')}
+                                </th>
+                            )
+                        })
+                    }
+                </tr>
+                <tr>
+                    {
+                        reducedCommitColumns.map((column, index) => {
+                            return (
+                                <th colSpan={column.span} key={index} className={[style['head-cell']].join(' ')}>
+                                    {column.commit}
+                                </th>
+                            )
+                        })
+                    }
+                </tr>
+                <tbody>
+                    {
+                        rows.map((row, index) => {
+                            return (
+                                <tr key={index}>
+                                    <td>
+                                        {row}
+                                    </td>
+                                    {
+                                        columns.map((column, index) => {
+                                            const cell = fetchCell(workflowRuns || [], column, row);
+                                            if (cell) {
+                                                return (
+                                                    <td key={index}>
+                                                        <div className={[style.cell, style[`execution-${cell.conclusion}`]].join(' ')}>
+                                                            <a href={cell.link} target='_blank' rel="noreferrer">{cell.conclusion}</a>
+                                                        </div>
+                                                    </td>
+                                                )
+                                            } else {
+                                                return (
+                                                    <td key={index}>
+                                                        empty
+                                                    </td>
+                                                )
+                                            }
+                                        })
+                                    }
+                                </tr>
+                            )
+                        })}
+                </tbody>
+            </table>
         </div >
     )
 }

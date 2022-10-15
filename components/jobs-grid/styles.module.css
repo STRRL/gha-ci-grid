@@ -1,36 +1,3 @@
-.content-box {
-    display: flex;
-}
-
-.left-part {
-    width: 15%;
-}
-
-.right-part {
-    overflow: auto;
-}
-
-.top-row {
-    height: 120px;
-}
-
-.table-header {
-    display: flex;
-}
-
-.job-name {
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.execution-container {
-    display: flex;
-}
-
 .cell {
     width: 90px;
     min-width: 90px;
@@ -39,19 +6,44 @@
     text-align: center;
 }
 
+.cell a:link {
+    text-decoration: none;
+}
+
+.cell a:visited {
+    text-decoration: none;
+}
+
+.cell a:hover {
+    text-decoration: none;
+}
+
+.cell a:active {
+    text-decoration: none;
+}
+
 .execution-success {
     background-color: hsl(120, 100%, 40%);
-    color: hsla(120, 90%, 15%, 0.9);
+}
+
+.execution-success a {
+    color: hsla(120, 90%, 15%, 0.7);
 }
 
 .execution-failure {
     background-color: hsl(0, 95%, 50%);
-    color: hsla(0, 90%, 15%, 0.9);
+}
+
+.execution-failure a {
+    color: hsla(0, 90%, 20%, 0.7);
 }
 
 .execution-pending {
     background-color: hsl(60, 95%, 50%);
-    color: hsla(60, 90%, 15%, 0.9);
+}
+
+.execution-pending a {
+    color: hsla(60, 90%, 15%, 0.7);
 }
 
 .execution-null {
