@@ -23,7 +23,7 @@ const Welcome = () => {
 
 
     const parseProject = (project: string) => {
-        const repo = project.replace("https://github.com", "")
+        const repo = project.replace("https://github.com/", "")
         const [owner, repoName] = repo.split("/")
         return {
             owner,
@@ -32,7 +32,7 @@ const Welcome = () => {
     }
 
     const redirectToProject = () => {
-        if(project === ""){
+        if (project === "") {
             router.push("/gh/STRRL/chaos-mesh.dev")
             return
         }
