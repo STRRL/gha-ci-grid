@@ -6,7 +6,6 @@ export type JobsGridProps = {
 }
 
 export type WorkflowRun = {
-    id: string,
     created_at: string,
     head_commit: {
         id: string
@@ -17,7 +16,6 @@ export type WorkflowRun = {
 
 export type JobRun = {
     name: string,
-    id: string,
     html_url: string,
     conclusion: string
 }
@@ -39,10 +37,16 @@ const JobsGrid = ({ workflowRuns }: JobsGridProps) => {
     const reducedMinuteColumns = columnMinuteReducer(columns);
     const reducedCommitColumns = columnCommitReducer(columns);
     return (
-        <div>
+        <div style={{
+            overflowX: "scroll",
+        }}>
             <table>
                 <tr>
-                    <th rowSpan={3}>Job Name</th>
+                    <th rowSpan={3}
+                        style={{
+                            position: 'sticky'
+                        }}
+                    >Job Name</th>
                     {
                         reducedDateColumns.map((column, index) => {
                             return (
@@ -69,7 +73,7 @@ const JobsGrid = ({ workflowRuns }: JobsGridProps) => {
                         reducedCommitColumns.map((column, index) => {
                             return (
                                 <th colSpan={column.span} key={index} className={[style['head-cell']].join(' ')}>
-                                    {column.commit}
+                                    {column.commit.substring(0, 8)}
                                 </th>
                             )
                         })
@@ -80,7 +84,11 @@ const JobsGrid = ({ workflowRuns }: JobsGridProps) => {
                         rows.map((row, index) => {
                             return (
                                 <tr key={index}>
-                                    <td>
+                                    <td style={{
+                                        width: 'auto',
+                                        whiteSpace: 'nowrap',
+                                    }}
+                                    >
                                         {row}
                                     </td>
                                     {
@@ -97,7 +105,8 @@ const JobsGrid = ({ workflowRuns }: JobsGridProps) => {
                                             } else {
                                                 return (
                                                     <td key={index}>
-                                                        empty
+                                                        <div className={[style.cell, style[`execution-null`]].join(' ')}>
+                                                        </div>
                                                     </td>
                                                 )
                                             }

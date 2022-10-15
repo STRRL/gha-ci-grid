@@ -1,6 +1,7 @@
 import { Container, Row, Table } from "@nextui-org/react";
 import GithubUserClient from "components/github-oauth-client/github-user-client";
 import JobExecutions from "components/job-exections";
+import JobsGrid, { WorkflowRun } from "components/jobs-grid";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookie } from "react-use";
@@ -14,32 +15,34 @@ const JobsSummary = () => {
     const [token] = useCookie("token");
     const ghClient = new GithubUserClient(token!);
 
-    type JobRun = {
-        run_id: number,
-        run_attempt?: number,
-        conclusion: string | null,
-    }
-    // key is job name, value is execution historyies
-    const [jobs, setJobs] = useState(new Map<string, Array<JobRun>>())
-
+    const [workflowRuns, setWorkflowRuns] = useState<WorkflowRun[]>([])
     useEffect(() => {
 
         const loadData = async () => {
-            const newJobs = new Map<string, Array<JobRun>>()
+            const result: WorkflowRun[] = [];
             const workflowRuns = await ghClient.listWorkflowRunsForWorkflow(owner, repo, workflowID)
             for (const workflowRun of workflowRuns) {
-                const jobsForWorkflowRun = await ghClient.listJobsWithWorkflowRun(owner, repo, workflowRun.id)
-                for (const job of jobsForWorkflowRun) {
-                    const jobName = job.name
-                    const jobHistory = newJobs.get(jobName)
-                    if (jobHistory) {
-                        jobHistory.push(job)
-                    } else {
-                        newJobs.set(jobName, [job])
+                const jobRuns = await ghClient.listJobsWithWorkflowRun(owner, repo, workflowRun.id)
+                result.push(
+                    {
+                        created_at: workflowRun.created_at,
+                        head_commit: {
+                            id: workflowRun.head_commit!.id
+                        },
+                        run_attempts: workflowRun.run_attempt!,
+                        job_runs: jobRuns.map(item => {
+                            return {
+                                run_id: item.run_id,
+                                run_attempt: item.run_attempt,
+                                conclusion: item.conclusion!,
+                                html_url: item.html_url!,
+                                name: item.name,
+                            }
+                        })
                     }
-                }
+                )
             }
-            setJobs(newJobs)
+            setWorkflowRuns(result)
         }
         if (owner && repo && workflowID) {
             loadData()
@@ -49,28 +52,9 @@ const JobsSummary = () => {
     return (
         <>
             <Container>
-                <Table>
-                    <Table.Header>
-                        <Table.Column>Job Name</Table.Column>
-                        <Table.Column>Executions</Table.Column>
-                    </Table.Header>
-                    <Table.Body>
-                        {
-                            Array.from(jobs.entries()).map(([jobName, jobHistory]) => {
-                                return (
-                                    <Table.Row key={jobName}>
-                                        <Table.Cell>{jobName}</Table.Cell>
-                                        <Table.Cell>
-                                            <JobExecutions
-                                                executions={jobHistory}
-                                            ></JobExecutions>
-                                        </Table.Cell>
-                                    </Table.Row>
-                                )
-                            })
-                        }
-                    </Table.Body>
-                </Table>
+                <JobsGrid
+                    workflowRuns={workflowRuns}
+                ></JobsGrid>
             </Container>
         </>
     )
