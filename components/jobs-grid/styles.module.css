@@ -1,0 +1,59 @@
+.cell {
+    width: 90px;
+    min-width: 90px;
+    min-height: 25px;
+    margin: 2px 2px;
+    text-align: center;
+}
+
+.cell a:link {
+    text-decoration: none;
+}
+
+.cell a:visited {
+    text-decoration: none;
+}
+
+.cell a:hover {
+    text-decoration: none;
+}
+
+.cell a:active {
+    text-decoration: none;
+}
+
+.execution-success {
+    background-color: hsl(120, 100%, 40%);
+}
+
+.execution-success a {
+    color: hsla(120, 90%, 15%, 0.7);
+}
+
+.execution-failure {
+    background-color: hsl(0, 95%, 50%);
+}
+
+.execution-failure a {
+    color: hsla(0, 95%, 10%, 0.5);
+}
+
+.execution-pending {
+    background-color: hsl(60, 95%, 50%);
+}
+
+.execution-pending a {
+    color: hsla(60, 90%, 15%, 0.7);
+}
+
+.execution-skipped {
+    background-color: hsl(0, 0%, 35%);
+}
+
+.execution-skipped a {
+    color: hsl(0, 0%, 90%);
+}
+
+.execution-null {
+    background-color: hsl(0, 0%, 90%);
+}
