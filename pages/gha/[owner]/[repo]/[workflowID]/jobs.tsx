@@ -13,12 +13,21 @@ const JobsSummary = () => {
     const workflowID = parseInt(router.query.workflowID as string);
 
     const [token] = useCookie("token");
-    const ghClient = new GithubUserClient(token!);
+    const [ghClient, setGhClient] = useState<GithubUserClient>();
+
+    useEffect(() => {
+        if (token) {
+            setGhClient(new GithubUserClient(token));
+        }
+    }, [token]);
 
     const [workflowRuns, setWorkflowRuns] = useState<WorkflowRun[]>([])
 
     useEffect(() => {
         const loadData = async () => {
+            if (!ghClient) {
+                return
+            }
             const result: WorkflowRun[] = [];
             const workflowRuns = await ghClient.listWorkflowRunsForWorkflow(owner, repo, workflowID)
             for (const workflowRun of workflowRuns) {

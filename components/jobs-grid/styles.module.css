@@ -47,10 +47,18 @@
 }
 
 .execution-skipped {
-    background-color: hsl(0, 0%, 35%);
+    background-color: hsl(0, 0%, 25%);
 }
 
 .execution-skipped a {
+    color: hsl(0, 0%, 90%);
+}
+
+.execution-cancelled {
+    background-color: hsl(0, 0%, 25%);
+}
+
+.execution-cancelled a {
     color: hsl(0, 0%, 90%);
 }
 
