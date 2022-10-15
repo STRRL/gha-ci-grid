@@ -48,7 +48,7 @@ const JobsGrid = ({ rows, columns }: JobsGridProps) => {
                 </div>
                 <div>
                     {rows?.map((row, index) => (
-                        <div key={`row-name-index-${index}`} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                        <div key={`row-name-index-${index}`} className={style['job-name']}>
                             {row.name}
                         </div>
                     ))}
@@ -63,18 +63,16 @@ const JobsGrid = ({ rows, columns }: JobsGridProps) => {
                     <div className={style['table-header']}>
                         {columns?.map((column, index) => (
                             <div key={`column-day-${index}`} >
-                                <div style={{ textAlign: 'center' }}>
+                                <div className={style['text-center']}>
                                     {(moment(column.date)).format('YYYY-MM-DD')}
                                 </div>
                                 <div>
                                     {column.children?.map((column_by_min, index) => (
                                         <div key={`column-minutes-${index}`}>
-                                            <div style={{ textAlign: 'center' }}>
+                                            <div className={style['text-center']}>
                                                 {(moment(column_by_min.timeByMinutes)).format('HH:mm')}
                                             </div>
-                                            <div style={{
-                                                display: 'flex',
-                                            }}>
+                                            <div className={style['execution-container']}>
                                                 {column_by_min.children?.map((column_by_commit, index) => (
                                                     <div key={`column-commit-${index}`} className={style.cell}>
                                                         {column_by_commit.commit}
@@ -91,10 +89,10 @@ const JobsGrid = ({ rows, columns }: JobsGridProps) => {
                 <div>
                     {rows?.map((row, index) => (
                         <div key={`row-content-index-${index}`} >
-                            <div style={{ display: 'flex' }}>
+                            <div className={style['execution-container']}>
                                 {row.executions?.map((execution, index) => (
                                     <div key={`row-execution-index-${index}`}
-                                        className={`${style.cell} ${style['execution-' + (execution ? execution.conclusion : 'null')]}`}
+                                        className={[style.cell, style['execution-' + (execution ? execution.conclusion : 'null')]].join(' ')}
                                     >
                                     </div>
                                 ))}

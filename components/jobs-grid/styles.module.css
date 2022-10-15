@@ -18,6 +18,19 @@
     display: flex;
 }
 
+.job-name {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.execution-container {
+    display: flex;
+}
+
 .cell {
     width: 90px;
     min-width: 90px;
