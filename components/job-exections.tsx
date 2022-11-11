@@ -1,4 +1,4 @@
-import { Col, Container, Row } from "@nextui-org/react"
+import { Col, Row } from "@nextui-org/react"
 
 const JobExecutions = (props: {
     executions: Array<{

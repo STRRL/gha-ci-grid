@@ -1,9 +1,7 @@
-import { Navbar } from "@nextui-org/react"
-import NavbarLogin from "./navbar-login"
+import { Navbar } from "@nextui-org/react";
 import Head from 'next/head';
-import { useCookie } from "react-use";
-import { useEffect } from "react";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import NavbarLogin from "./navbar-login";
 
 const Layout = ({
     children,

@@ -1,5 +1,5 @@
-import { Octokit } from "octokit";
 import { retry } from "@octokit/plugin-retry";
+import { Octokit } from "octokit";
 
 export default class GithubUserClient {
     octokit: Octokit

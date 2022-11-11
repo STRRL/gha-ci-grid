@@ -1,10 +1,9 @@
-import { Container, Row, Table } from "@nextui-org/react";
+import { Container } from "@nextui-org/react";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import GithubUserClient from "components/github-oauth-client/github-user-client";
-import JobExecutions from "components/job-exections";
-import JobsGrid, { WorkflowRun } from "components/jobs-grid";
+import JobsGrid from "components/jobs-grid";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useCookie } from "react-use";
 
 const JobsSummary = () => {

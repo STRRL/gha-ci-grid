@@ -1,9 +1,9 @@
-import { Button, Col, Container, Input, Row, styled, Table, Text } from "@nextui-org/react"
+import { Col, Container, Row, Table, Text } from "@nextui-org/react"
 import { useQueries, useQuery } from "@tanstack/react-query"
 import GithubUserClient from "components/github-oauth-client/github-user-client"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo } from "react"
 import { useCookie } from "react-use"
 
 const WorkflowSummary = () => {

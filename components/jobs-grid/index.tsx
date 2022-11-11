@@ -1,7 +1,7 @@
-import style from './styles.module.css';
 import moment from 'moment';
-import { columnCommitReducer, columnDateReducer, columnMinuteReducer, fetchCell, fetchColumns, fetchRows, ReducedCommitColumn, ReducedDateColumn, ReducedMinuteColumn } from './aggregate';
 import { useEffect, useState } from 'react';
+import { columnCommitReducer, columnDateReducer, columnMinuteReducer, fetchCell, fetchColumns, fetchRows, ReducedCommitColumn, ReducedDateColumn, ReducedMinuteColumn } from './aggregate';
+import style from './styles.module.css';
 export type JobsGridProps = {
     workflowRuns: WorkflowRun[] | null
 }

@@ -1,6 +1,6 @@
-import { App, Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 import { throttling } from "@octokit/plugin-throttling";
+import { Octokit } from "octokit";
 import GitHubAppInstallationClient from "./github-app-installation-client";
 
 export default class GithubAppClient {

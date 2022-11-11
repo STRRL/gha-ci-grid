@@ -1,4 +1,4 @@
-import { Button, Link, Navbar, User } from "@nextui-org/react";
+import { Button, Navbar, User } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookie } from "react-use";
