@@ -105,6 +105,10 @@ const WorkflowSummary = () => {
         return sorted
     }, [queryListWorkflowRunsWithOwnerRepoWorkflowIDSince])
 
+    const loadingState = useMemo(() => {
+        return queryListWorkflowRunsWithOwnerRepoWorkflowIDSince.map(item => item.isFetched).every(it => it) ? "idle" : "loading"
+    }, [queryListWorkflowRunsWithOwnerRepoWorkflowIDSince])
+
     return (
         <>
             <Container>
@@ -129,7 +133,7 @@ const WorkflowSummary = () => {
                                     minHeight: "300px",
                                 }}
                                 items={workflowRunsStatistics}
-                                loadingState={"idle"}
+                                loadingState={loadingState}
                             >
                                 {(item) => (
                                     <Table.Row key={item.id}>
