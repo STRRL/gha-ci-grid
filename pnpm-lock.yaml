@@ -5,6 +5,7 @@ specifiers:
   '@nextui-org/react': ^1.0.0-beta.10
   '@octokit/auth-app': ^4.0.7
   '@octokit/plugin-retry': ^3.0.9
+  '@octokit/plugin-throttling': ^4.3.2
   '@storybook/addon-actions': ^6.5.12
   '@storybook/addon-essentials': ^6.5.12
   '@storybook/addon-interactions': ^6.5.12
@@ -39,6 +40,7 @@ dependencies:
   '@nextui-org/react': 1.0.0-beta.10_biqbaboplfbrettd7655fr4n2y
   '@octokit/auth-app': 4.0.7
   '@octokit/plugin-retry': 3.0.9
+  '@octokit/plugin-throttling': 4.3.2
   '@tanstack/react-query': 4.14.6_biqbaboplfbrettd7655fr4n2y
   bottleneck: 2.19.5
   cookies-next: 2.1.1
@@ -2494,6 +2496,16 @@ packages:
       '@octokit/core': '>=3'
     dependencies:
       '@octokit/core': 4.1.0
+      '@octokit/types': 8.0.0
+      bottleneck: 2.19.5
+    dev: false
+
+  /@octokit/plugin-throttling/4.3.2:
+    resolution: {integrity: sha512-ZaCK599h3tzcoy0Jtdab95jgmD7X9iAk59E2E7hYKCAmnURaI4WpzwL9vckImilybUGrjY1JOWJapDs2N2D3vw==}
+    engines: {node: '>= 14'}
+    peerDependencies:
+      '@octokit/core': ^4.0.0
+    dependencies:
       '@octokit/types': 8.0.0
       bottleneck: 2.19.5
     dev: false
