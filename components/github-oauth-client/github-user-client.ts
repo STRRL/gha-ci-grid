@@ -60,7 +60,7 @@ export default class GithubUserClient {
         return listWorkflowRunsReponse.data.workflow_runs
     }
 
-    async ListWorkflowRunsWithOwnerRepoWorkflowIDSince(owner: string, repo: string, workflowID: number, since: Date) {
+    async listWorkflowRunsWithOwnerRepoWorkflowIDSince(owner: string, repo: string, workflowID: number, since: Date) {
         let page = 1
         const pageSize = 100
         const listWorkflowRunsResponse = await this.octokit.rest.actions.listWorkflowRuns({

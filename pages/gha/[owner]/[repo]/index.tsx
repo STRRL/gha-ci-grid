@@ -1,8 +1,9 @@
 import { Button, Col, Container, Input, Row, styled, Table, Text } from "@nextui-org/react"
+import { useQueries, useQuery } from "@tanstack/react-query"
 import GithubUserClient from "components/github-oauth-client/github-user-client"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useCookie } from "react-use"
 
 const WorkflowSummary = () => {
@@ -12,6 +13,7 @@ const WorkflowSummary = () => {
         html_url: string,
         created_at: string,
         path: string,
+        node_id: string,
     }
 
     type WorkflowRun = {
@@ -21,7 +23,6 @@ const WorkflowSummary = () => {
     }
 
     type WorkflowRunStatistics = {
-
         lastRun: Date,
         all: number,
         success: number,
@@ -30,61 +31,79 @@ const WorkflowSummary = () => {
     } & Workflow
 
     const router = useRouter()
-    const owner = router.query.owner as string
-    const repo = router.query.repo as string
+    const owner = useMemo(() => router.query.owner as string, [router.query.owner])
+    const repo = useMemo(() => router.query.repo as string, [router.query.repo])
 
+    console.log(owner, repo)
     const [token] = useCookie("token")
-    const ghClient = new GithubUserClient(token!);
-    const [loadingState, setLoadingState] = useState<'loading' | 'sorting' | 'loadingMore' | 'error' | 'idle' | 'filtering'>('loadingMore')
-    const [workflows, setWorkflows] = useState<Array<Workflow>>([])
-    const [workflowRunsStatistics, setWorkflowRunsStatistics] = useState(new Array<WorkflowRunStatistics>())
+    const ghClient = useMemo(() => new GithubUserClient(token!), [token])
+
+    const queryListWorkflowsWithOwnerRepo = useQuery({
+        queryKey: ["workflowsForRepo", { owner, repo }],
+        queryFn: () => ghClient.listWorkflowsWithOwnerRepo(owner, repo),
+        staleTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false
+    })
 
     useEffect(() => {
-        if (owner && repo) {
-            ghClient.listWorkflowsWithOwnerRepo(owner, repo).then(data => {
-                setWorkflows(data.workflows)
-            })
-        }
-    }, [owner, repo])
+        console.log(queryListWorkflowsWithOwnerRepo.data)
+    }, [queryListWorkflowsWithOwnerRepo.data])
 
-    useEffect(() => {
-        const temp = new Array<WorkflowRunStatistics>()
-        setLoadingState('loadingMore')
-        Promise.all(workflows.map(
-            workflow => {
-                // 30 days ago
-                const sevenDaysAgo = new Date()
-                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 30)
-                return ghClient.ListWorkflowRunsWithOwnerRepoWorkflowIDSince(owner, repo, workflow.id, sevenDaysAgo).then(
-                    data => {
-                        const all = data.length
-                        const success = data.filter(item => item.conclusion === "success").length
-                        const failure = data.filter(item => item.conclusion === "failure").length
-                        const statistics: WorkflowRunStatistics = {
-                            lastRun: data.reduce((acc, cur) => { if (cur.created_at && new Date(cur.created_at) > acc) return new Date(cur.created_at); return acc }, new Date(0)),
-                            all: all,
-                            success: success,
-                            failure: failure,
-                            flakeRate: failure / all,
-                            ...workflow,
+    const thirtyDaysAgo = useMemo(() => {
+        const d = new Date()
+        d.setDate(d.getDate() - 30)
+        return d
+    }, [])
+
+    const queryListWorkflowRunsWithOwnerRepoWorkflowIDSince = useQueries({
+        queries: (queryListWorkflowsWithOwnerRepo.data?.workflows || []).map((workflow: Workflow) => {
+            return {
+                queryKey: ["listWorkflowRunsWithOwnerRepoWorkflowIDSince", owner, repo, workflow.id, thirtyDaysAgo],
+                queryFn: () => {
+                    return ghClient.listWorkflowRunsWithOwnerRepoWorkflowIDSince(owner, repo, workflow.id, thirtyDaysAgo).then(response => {
+                        return {
+                            workflow: workflow,
+                            response: response
                         }
-                        temp.push(statistics)
                     }
-                )
+                    )
+                },
+                refetchOnWindowFocus: false
             }
-        )).then(() => {
-            setWorkflowRunsStatistics(temp.sort((a, b) => {
-                if (Number.isNaN(a.flakeRate)) {
-                    return 1
-                }
-                if (Number.isNaN(b.flakeRate)) {
-                    return -1
-                }
-                return b.flakeRate - a.flakeRate
-            }));
-            setLoadingState('idle')
         })
-    }, [workflows])
+    })
+
+    const workflowRunsStatistics = useMemo<Array<WorkflowRunStatistics>>(() => {
+        const summaries = queryListWorkflowRunsWithOwnerRepoWorkflowIDSince.map(it => it.data).map(
+            it => {
+                const all = it?.response.length || 0
+                const success = it?.response.filter((run: WorkflowRun) => run.conclusion === "success").length || 0
+                const failure = it?.response.filter((run: WorkflowRun) => run.conclusion === "failure").length || 0
+
+                const result: WorkflowRunStatistics | null = it ? {
+                    lastRun: it?.response.reduce((acc, cur) => { if (cur.created_at && new Date(cur.created_at) > acc) return new Date(cur.created_at); return acc }, new Date(0)),
+                    all: all,
+                    success: success,
+                    failure: failure,
+                    flakeRate: failure / all,
+                    ...it?.workflow
+                } : null
+                return result
+            }
+        ).filter(it => it !== null) as Array<WorkflowRunStatistics>
+
+        const sorted = summaries.sort((a, b) => {
+            if (Number.isNaN(a.flakeRate)) {
+                return 1
+            }
+            if (Number.isNaN(b.flakeRate)) {
+                return -1
+            }
+            return b.flakeRate - a.flakeRate
+        })
+        console.log(sorted)
+        return sorted
+    }, [queryListWorkflowRunsWithOwnerRepoWorkflowIDSince])
 
     return (
         <>
@@ -110,7 +129,7 @@ const WorkflowSummary = () => {
                                     minHeight: "300px",
                                 }}
                                 items={workflowRunsStatistics}
-                                loadingState={loadingState}
+                                loadingState={"idle"}
                             >
                                 {(item) => (
                                     <Table.Row key={item.id}>
