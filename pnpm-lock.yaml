@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@babel/core': ^7.19.3
   '@nextui-org/react': ^1.0.0-beta.10
+  '@octokit/auth-app': ^4.0.7
   '@octokit/plugin-retry': ^3.0.9
   '@storybook/addon-actions': ^6.5.12
   '@storybook/addon-essentials': ^6.5.12
@@ -36,6 +37,7 @@ specifiers:
 
 dependencies:
   '@nextui-org/react': 1.0.0-beta.10_biqbaboplfbrettd7655fr4n2y
+  '@octokit/auth-app': 4.0.7
   '@octokit/plugin-retry': 3.0.9
   '@tanstack/react-query': 4.14.6_biqbaboplfbrettd7655fr4n2y
   bottleneck: 2.19.5
