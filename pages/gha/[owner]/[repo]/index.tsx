@@ -34,7 +34,6 @@ const WorkflowSummary = () => {
     const owner = useMemo(() => router.query.owner as string, [router.query.owner])
     const repo = useMemo(() => router.query.repo as string, [router.query.repo])
 
-    console.log(owner, repo)
     const [token] = useCookie("token")
     const ghClient = useMemo(() => new GithubUserClient(token!), [token])
 
@@ -44,10 +43,6 @@ const WorkflowSummary = () => {
         staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false
     })
-
-    useEffect(() => {
-        console.log(queryListWorkflowsWithOwnerRepo.data)
-    }, [queryListWorkflowsWithOwnerRepo.data])
 
     const thirtyDaysAgo = useMemo(() => {
         const d = new Date()
@@ -101,7 +96,6 @@ const WorkflowSummary = () => {
             }
             return b.flakeRate - a.flakeRate
         })
-        console.log(sorted)
         return sorted
     }, [queryListWorkflowRunsWithOwnerRepoWorkflowIDSince])
 
